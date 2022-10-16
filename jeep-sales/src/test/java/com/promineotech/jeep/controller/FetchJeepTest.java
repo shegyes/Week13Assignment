@@ -3,6 +3,7 @@ package com.promineotech.jeep.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -45,13 +46,18 @@ class FetchJeepTest {
 		String trim = "Sport";
 		//String uri = String.format("String.format(\"http://localhost:%d/jeeps?model=%s&trim=%s\", serverPort, model, trim");
 		String uri = String.format("http://localhost:%d/jeeps?model=%s&trim=%s", serverPort, model, trim);
+		//String uri = String.format("5s?model=%s&trim=%s", getBaseUri(), model, trim);
 		ResponseEntity<List<Jeep>> response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 		
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-					
+		
+		List<Jeep> actual = response.getBody();			
 		List<Jeep> expected = buildExpected();
-		System.out.println(expected);
-		assertThat(response.getBody()).isEqualTo(expected);
+		//System.out.println(expected);
+		
+		actual.forEach(jeep -> jeep.setModelPK(null));
+		
+		assertThat(actual).isEqualTo(expected);
 		
 	
 		
@@ -59,11 +65,12 @@ class FetchJeepTest {
 	
 	
 	
-	protected List<Jeep> buildExpected() {
+	private List<Jeep> buildExpected() {
 		// TODO Auto-generated method stub
 		List<Jeep> list = new LinkedList<>();
-		
+		Jeep.builder();
 		// @formatter:off
+		//list.add(Jeep.builder()
 		list.add(Jeep.builder()
 				.modelId(JeepModel.WRANGLER)
 				.trimLevel("Sport")
@@ -82,13 +89,10 @@ class FetchJeepTest {
 		
 		
 		// @formatter:on
+		Collections.sort(list);
 		return list;
 	}
 
-	
-	
-	
 		
-	
 
 }

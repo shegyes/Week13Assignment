@@ -1,8 +1,0 @@
-package com.promineotech.jeep.controller.support;
-
-public class BaseTest {
-	@LocalServerPort
-	private int serverPort;
-	
-	
-}
